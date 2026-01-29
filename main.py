@@ -5,6 +5,8 @@ import numpy as np
 
 tab1, tab2 = st.tabs(["Add expense", "Overview"])
 
+df = None
+
 with tab1:
     st.title("Expense Tracker")
     st.write("Register your expenses and get and overview of your spendings")
@@ -36,5 +38,16 @@ with tab1:
 
             df.to_csv("expenses.csv", index=False)
             st.success("Expense Saved! 💸")
-            with tab2:
-                st.dataframe(df)
+
+with tab2:
+    st.header("Overview")
+
+    if df is None:
+        try:
+            df = pd.read_csv("expenses.csv")
+        except FileNotFoundError:
+            df = pd.DataFrame()
+    if not df.empty:
+        st.dataframe(df)
+    else:
+        st.info("No expenses recorded yet.")
