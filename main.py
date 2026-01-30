@@ -16,7 +16,16 @@ with tab1:
     with st.form(key="expense_form"):
         amount = st.number_input("Amount (SEK)", min_value=0.0, format="%.2f")
         category = st.selectbox(
-            "Category", ["Food", "Transport", "Housing", "Entertainment", "Other"]
+            "Category",
+            [
+                "Food",
+                "Transport",
+                "Housing",
+                "Entertainment",
+                "Subscription",
+                "Student Loan",
+                "Other",
+            ],
         )
         expense_date = st.date_input("Select a date", value=date(2026, 1, 29))
         comment = st.text_input("Comment (optional)")
