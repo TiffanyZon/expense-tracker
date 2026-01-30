@@ -2,6 +2,7 @@ import streamlit as st
 from datetime import date
 import pandas as pd
 import numpy as np
+import plotly.express as px
 
 tab1, tab2 = st.tabs(["Add expense", "Overview"])
 
@@ -48,6 +49,25 @@ with tab2:
         except FileNotFoundError:
             df = pd.DataFrame()
     if not df.empty:
-        st.dataframe(df)
+        with st.expander("Expenses Preview"):
+            st.dataframe(df)
+        col1, col2 = st.columns([1, 1])
+        with col1:
+            st.subheader("Spending by Category (Pie)")
+            fig = px.pie(
+                df,
+                values="amount",
+                names="category",
+                title=None,
+                height=400,
+                color_discrete_sequence=px.colors.qualitative.Set2,
+            )
+            st.plotly_chart(fig, use_container_width=True)
+
+        with col2:
+            st.subheader("Spending by Category (Bar)")
+            summary = df.groupby("category")["amount"].sum()
+            st.bar_chart(summary, use_container_width=True)
+
     else:
         st.info("No expenses recorded yet.")
