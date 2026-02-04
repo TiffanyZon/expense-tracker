@@ -2,7 +2,7 @@ from logic import save_expense, load_expenses, EXPENSE_COLUMNS
 import pandas as pd
 
 
-def test_expense(tmp_path):
+def test_save_expense_creates_row(tmp_path):
     amount = 10
     category = "Food"
     date = "2026-01-19"
