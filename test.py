@@ -19,3 +19,11 @@ def test_expense(tmp_path):
     assert row["category"] == category
     assert row["date"] == date
     assert row["comment"] == comment
+
+
+def test_save_expenses_writes_file(tmp_path):
+    filename = tmp_path / "expenses.csv"
+
+    save_expense(10, "Food", "2026-02-03", "Snacks", filename)
+
+    assert filename.exists()
