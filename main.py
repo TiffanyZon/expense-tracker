@@ -2,10 +2,10 @@ import streamlit as st
 from datetime import date
 import pandas as pd
 import plotly.express as px
-from logic import save_expense, load_expenses
+from logic import save_expense, load_expenses, sum_expenses_by_category, create_pie_fig
 
+FILENAME = "expenses.csv"
 tab1, tab2 = st.tabs(["Add expense", "Overview"])
-filename = "expenses.csv"
 df = None
 
 with tab1:
@@ -34,7 +34,7 @@ with tab1:
         if submitted:
             st.balloons()
             new_expense = save_expense(
-                amount, category, expense_date, comment, filename
+                amount, category, expense_date, comment, FILENAME
             )
             st.success("Expense Saved! 💸")
 
@@ -42,26 +42,19 @@ with tab2:
     st.header("Overview")
 
     if df is None:
-        df = load_expenses(filename)
+        df = load_expenses(FILENAME)
     if not df.empty:
         with st.expander("Expenses Preview"):
             st.dataframe(df)
         col1, col2 = st.columns([1, 1])
         with col1:
             st.subheader("Spending by Category (Pie)")
-            fig = px.pie(
-                df,
-                values="amount",
-                names="category",
-                title=None,
-                height=400,
-                color_discrete_sequence=px.colors.qualitative.Set2,
-            )
+            fig = create_pie_fig(df)
             st.plotly_chart(fig, use_container_width=True)
 
         with col2:
             st.subheader("Spending by Category (Bar)")
-            summary = df.groupby("category")["amount"].sum()
+            summary = sum_expenses_by_category(df)
             st.bar_chart(summary, use_container_width=True)
 
     else:

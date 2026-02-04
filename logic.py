@@ -1,4 +1,5 @@
 import pandas as pd
+import plotly.express as px
 
 EXPENSE_COLUMNS = ["amount", "category", "date", "comment"]
 
@@ -25,3 +26,18 @@ def load_expenses(filename):
 
 def add_expense_to_df(df, expense):
     return pd.concat([df, pd.DataFrame([expense])], ignore_index=True)
+
+
+def sum_expenses_by_category(df):
+    return df.groupby("category")["amount"].sum()
+
+
+def create_pie_fig(df):
+    return px.pie(
+        df,
+        values="amount",
+        names="category",
+        title=None,
+        height=400,
+        color_discrete_sequence=px.colors.qualitative.Set2,
+    )
