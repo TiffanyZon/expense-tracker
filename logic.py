@@ -15,6 +15,7 @@ def save_expense(amount, category, date, comment, filename):
     df = load_expenses(filename)
     df = add_expense_to_df(df, new_expense)
     df.to_csv(filename, index=False)
+    return df
 
 
 def load_expenses(filename):
