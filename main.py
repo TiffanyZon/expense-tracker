@@ -1,11 +1,11 @@
 import streamlit as st
 from datetime import date
 import pandas as pd
-import numpy as np
 import plotly.express as px
+from logic import save_expense, load_expenses
 
 tab1, tab2 = st.tabs(["Add expense", "Overview"])
-
+filename = "expenses.csv"
 df = None
 
 with tab1:
@@ -33,30 +33,16 @@ with tab1:
 
         if submitted:
             st.balloons()
-            new_expense = {
-                "amount": amount,
-                "category": category,
-                "date": expense_date,
-                "comment": comment,
-            }
-
-            try:
-                df = pd.read_csv("expenses.csv")
-                df = pd.concat([df, pd.DataFrame([new_expense])], ignore_index=True)
-            except FileNotFoundError:
-                df = pd.DataFrame([new_expense])
-
-            df.to_csv("expenses.csv", index=False)
+            new_expense = save_expense(
+                amount, category, expense_date, comment, filename
+            )
             st.success("Expense Saved! 💸")
 
 with tab2:
     st.header("Overview")
 
     if df is None:
-        try:
-            df = pd.read_csv("expenses.csv")
-        except FileNotFoundError:
-            df = pd.DataFrame()
+        df = load_expenses(filename)
     if not df.empty:
         with st.expander("Expenses Preview"):
             st.dataframe(df)

@@ -25,11 +25,3 @@ def load_expenses(filename):
 
 def add_expense_to_df(df, expense):
     return pd.concat([df, pd.DataFrame([expense])], ignore_index=True)
-
-
-def sum_expenses(expenses):
-    pass
-
-
-def create_pie_chart():
-    pass
