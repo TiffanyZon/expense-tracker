@@ -1,4 +1,4 @@
-from logic import save_expense, load_expenses, EXPENSE_COLUMNS
+from logic import save_expense, load_expenses, sum_expenses_by_category, EXPENSE_COLUMNS
 import pandas as pd
 
 
@@ -39,3 +39,18 @@ def test_load_expenses_file_not_found(tmp_path):
 
     assert df.empty
     assert list(df.columns) == EXPENSE_COLUMNS
+
+
+def test_sum_expenses_by_category():
+    df = pd.DataFrame(
+        [
+            {"amount": 10, "category": "Food"},
+            {"amount": 100, "category": "Transport"},
+            {"amount": 89, "category": "Food"},
+        ]
+    )
+
+    summary = sum_expenses_by_category(df)
+
+    assert summary["Food"] == 99
+    assert summary["Transport"] == 100
