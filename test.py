@@ -1,4 +1,4 @@
-from logic import save_expense
+from logic import save_expense, load_expenses, EXPENSE_COLUMNS
 import pandas as pd
 
 
@@ -27,3 +27,12 @@ def test_save_expenses_writes_file(tmp_path):
     save_expense(10, "Food", "2026-02-03", "Snacks", filename)
 
     assert filename.exists()
+
+
+def test_load_expenses_file_not_found(tmp_path):
+    filename = tmp_path / "missing.csv"
+
+    df = load_expenses(filename)
+
+    assert df.empty
+    assert list(df.columns) == EXPENSE_COLUMNS
