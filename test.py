@@ -14,19 +14,22 @@ def test_expense(tmp_path):
     assert len(df) == 1
 
     row = df.iloc[0]
-
     assert row["amount"] == amount
     assert row["category"] == category
     assert row["date"] == date
     assert row["comment"] == comment
 
 
-def test_save_expenses_writes_file(tmp_path):
+def test_load_expenses_file_exists(tmp_path):
     filename = tmp_path / "expenses.csv"
 
-    save_expense(10, "Food", "2026-02-03", "Snacks", filename)
+    filename.write_text("amount,category,date,comment\n" "10,Food,2026-02-03,Lunch\n")
 
-    assert filename.exists()
+    df = load_expenses(filename)
+
+    assert not df.empty
+    assert len(df) == 1
+    assert df.iloc[0]["amount"] == 10
 
 
 def test_load_expenses_file_not_found(tmp_path):
